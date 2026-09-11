@@ -1,10 +1,14 @@
 generator client {
-  provider = "prisma-client-js"
+  // Prisma 7 replaced "prisma-client-js" with "prisma-client" and no longer
+  // generates into node_modules, so an explicit output path is required.
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
+  // Prisma 7 no longer accepts `url` here - the connection string for Migrate
+  // lives in prisma.config.ts, and PrismaClient gets a driver adapter instead.
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {

@@ -47,15 +47,7 @@ This command will:
 - Start all backend services
 - Start the frontend development server
 
-### Step 4: Install PHP Dependencies
-
-The Products Service requires Composer dependencies to be installed inside the container. This is necessary because the volume mount overwrites the container's vendor directory:
-
-```bash
-docker compose exec products-service composer install
-```
-
-### Step 5: Verify Services Are Running
+### Step 4: Verify Services Are Running
 
 Check that all containers are running:
 
@@ -65,7 +57,7 @@ docker compose ps
 
 You should see all services with status "Up" or "running".
 
-### Step 6: Access the Application
+### Step 5: Access the Application
 
 Open your browser and navigate to:
 - **Frontend**: http://localhost:5173
@@ -77,20 +69,18 @@ Open your browser and navigate to:
 
 ## Common Issues and Solutions
 
-### Issue 1: PHP Autoload Error
+### Issue 1: PHP Dependencies Changed
 
-**Error Message:**
-```
-Warning: require(/var/www/html/public/../vendor/autoload.php): Failed to open stream: No such file or directory
-Fatal error: Uncaught Error: Failed opening required '/var/www/html/public/../vendor/autoload.php'
-```
+If you edit `products-service/composer.json`, rebuild the image so the new
+dependencies are installed:
 
-**Cause:** The Docker volume mount overwrites the container's `/var/www/html` directory, removing the `vendor` folder that was created during the image build.
-
-**Solution:**
 ```bash
-docker compose exec products-service composer install
+docker compose up -d --build products-service
 ```
+
+Only `products-service/public/` is mounted into the container, so the `vendor/`
+directory produced during the image build stays intact and no manual
+`composer install` is needed for a normal start.
 
 ### Issue 2: CORS Errors
 
@@ -207,7 +197,6 @@ docker compose down -v
 
 # Start fresh
 docker compose up -d --build
-docker compose exec products-service composer install
 ```
 
 ### Access Container Shell
@@ -232,19 +221,19 @@ docker compose exec database psql -U postgres -d ecommerce_db
 
 | Service | Technology | Port | Description |
 |---------|------------|------|-------------|
-| Frontend | Vanilla JS + Vite | 5173 | Web application UI |
-| Products Service | PHP + Slim | 8082 | Product management API |
-| Users Service | Python + FastAPI | 8000 | User management API |
-| Orders Service | Java + Spring Boot | 8083 | Order management API |
-| Database | PostgreSQL | 5432 | Data persistence |
-| Migration Runner | Prisma | - | Database migrations |
+| Frontend | Vanilla JS + Vite 7.3.6 (Node 24) | 5173 | Web application UI |
+| Products Service | PHP 8.4 + Slim 4.15.3 | 8082 | Product management API |
+| Users Service | Python 3.13 + FastAPI 0.141.1 | 8000 | User management API |
+| Orders Service | Java 25 + Spring Boot 4.1.1 | 8083 | Order management API |
+| Database | PostgreSQL 18.6 | 5432 | Data persistence |
+| Migration Runner | Node 24 + Prisma 7.10.0 | - | Database migrations |
 
 ---
 
 ## Development Workflow
 
 1. Make code changes in your local editor
-2. For PHP and Python services, changes are reflected immediately due to volume mounts
+2. For PHP (`products-service/public/`) and Python services, changes are reflected immediately due to volume mounts
 3. For Java service, rebuild is required:
    ```bash
    docker compose up -d --build orders-service

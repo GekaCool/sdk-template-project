@@ -29,3 +29,6 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Prisma 7 generates the client into this directory instead of node_modules
+generated/

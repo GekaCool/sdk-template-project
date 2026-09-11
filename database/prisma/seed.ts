@@ -1,6 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '../generated/prisma/client'
 
-const prisma = new PrismaClient()
+// Prisma 7 connects through a driver adapter instead of a connection string
+// passed to the client. PrismaPg wraps the node-postgres (pg) driver.
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
+const prisma = new PrismaClient({ adapter })
 
 async function main() {
     // Seed Users

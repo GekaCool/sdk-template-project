@@ -1,11 +1,12 @@
 # E-commerce Starter
 
 ## Services
-- **Frontend**: Vanilla JavaScript + Vite 7.2.4 (Port 5173)
-- **Products**: PHP Slim 4.15.1 (Port 8082)
-- **Users**: Python FastAPI 0.120.0 (Port 8000)
-- **Orders**: Java Spring Boot 4.0.2 (Port 8083)
-- **Database**: PostgreSQL 18.1 (Port 5432)
+- **Frontend**: Vanilla JavaScript + Vite 7.3.6 (Port 5173)
+- **Products**: PHP 8.4 + Slim 4.15.3 (Port 8082)
+- **Users**: Python 3.13 + FastAPI 0.141.1 (Port 8000)
+- **Orders**: Java 25 + Spring Boot 4.1.1 (Port 8083)
+- **Database**: PostgreSQL 18.6 (Port 5432)
+- **Migrations**: Node.js 24 + Prisma 7.10.0
 
 ## Quick Start
 1. **Configure**: `cp .env.example .env`
