@@ -2,7 +2,7 @@
 
 **Session:** 1 — 14 September 2026
 **Deadline:** Friday 25 September 2026, 20:00 Riga time (UTC+3)
-**Submit:** repository URL + commit SHA, in Evaluentis
+**Submit:** repository URL + commit SHA, in Evaluentis (https://evaluatentis.leitass.eu)
 
 ---
 
