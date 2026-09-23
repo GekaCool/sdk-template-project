@@ -42,7 +42,33 @@ Request traced: **`GET /users`**, the users list rendered on page load.
 
 ## c. Environment gotchas
 
-The only problem i faced is port-forwarding
+During set up no major problems were faced. Only the overall structure appeared cumbersome due to multiple technologies. First build took somewhat around 7 minutes.
+
 ## d. One thing the documentation gets wrong or leaves out
 
-_TODO_
+### The Database entry leaves out its port
+
+Every service component in `ARCHITECTURE.md` has a **Port** line, but the Database entry at [`ARCHITECTURE.md:60-62`](../../ARCHITECTURE.md#L60-L62) does not.
+
+- **Database:** it *is* published. [`docker-compose.yml:84`](../../docker-compose.yml#L84) maps `"${DB_PORT}:5432"`, and [`.env.example:6`](../../.env.example#L6) sets `DB_PORT=5432`, so it is exposed on host port `5432` (internal `5432`). Services inside the network reach it as `database:5432`.
+
+### Changing ports: barely documented, and the one example breaks the frontend
+
+**Where changing ports is (and is not) documented**
+
+| File                                                       | What it says                                                                                                                                   |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`README.md:4-8`](../../README.md#L4-L8)                   | Fixed ports only ("Port 8082" etc.). Never says they can be changed.                                                                           |
+| [`ARCHITECTURE.md:71`](../../ARCHITECTURE.md#L71)          | "Environment variables (ports, credentials) are centralized in a `.env` file". Implies it, never says how.                                     |
+| [`ARCHITECTURE.md:43-58`](../../ARCHITECTURE.md#L43-L58)   | Only the frontend is "host port (variable)". Products, Users and Orders are listed with fixed host ports, although all three come from `.env`. |
+| [`dev-starter.md:124-141`](../../dev-starter.md#L124-L141) | The **only** instructions: "modify the ports in `.env`", with an example.                                                                      |
+
+### Changing the frontend port also needs `vite.config.js`, which no doc mentions
+
+[`dev-starter.md:133-137`](../../dev-starter.md#L133-L137) says to "modify the ports in `.env`" and gives `FRONTEND_PORT=3000` as an example. For the frontend, `.env` alone is not enough:
+
+- [`docker-compose.yml:13`](../../docker-compose.yml#L13) maps `"${FRONTEND_PORT}:${FRONTEND_PORT}"`, so with `3000` the mapping becomes `3000:3000`.
+- Vite still listens on `5173`, hard-coded in [`frontend/vite.config.js:6`](../../frontend/vite.config.js#L6) (`port: 5173`).
+- Nothing listens on port 3000 inside the container, so `localhost:3000` does not load.
+
+It only works today because the default `FRONTEND_PORT=5173` ([`.env.example:2`](../../.env.example#L2)) happens to match `vite.config.js`. To use another port, `port` in `vite.config.js` has to be changed to the same value, and no document says so.
