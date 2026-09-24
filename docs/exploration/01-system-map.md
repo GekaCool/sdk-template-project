@@ -1,6 +1,6 @@
 # Module 1 — System map
 
-## a. My own diagram
+## a. Diagram
 
 ```mermaid
 flowchart LR
