@@ -72,3 +72,6 @@ Every service component in `ARCHITECTURE.md` has a **Port** line, but the Databa
 - Nothing listens on port 3000 inside the container, so `localhost:3000` does not load.
 
 It only works today because the default `FRONTEND_PORT=5173` ([`.env.example:2`](../../.env.example#L2)) happens to match `vite.config.js`. To use another port, `port` in `vite.config.js` has to be changed to the same value, and no document says so.
+
+### Minor innacuracies
+ARCHITECTURE.md:62 calls the database "Shared persistent storage for both services", but three services use it.
